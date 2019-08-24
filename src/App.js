@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import axios from 'axios';
+import {
+  SortByMonthTable,
+  SortByYearTable,
+  DefaultSortTable,
+} from './components/WithSort';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default class App extends Component {
+  state = {
+    list: [],
+  };
 
-export default App;
+  componentDidMount() {
+    axios
+      .get(
+        'https://raw.githubusercontent.com/netology-code/ra16-homeworks/master/hoc/aggregation/data/data.json',
+      )
+      .then(response => {
+        this.setState(response.data);
+      });
+  }
+
+  render() {
+    const { list } = this.state;
+    return (
+      <div id="app">
+        <SortByMonthTable list={list} />
+        <SortByYearTable list={list} />
+        <DefaultSortTable list={list} />
+      </div>
+    );
+  }
+}
